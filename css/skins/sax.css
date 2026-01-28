@@ -892,3 +892,30 @@ section{
     text-align: center;
   }
 }
+
+/* ===== Soft fade-in for section titles ===== */
+
+.section_header,
+.section_header h1,
+.section_header h2 {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: softFadeUp 0.8s ease-out forwards;
+}
+
+/* небольшая задержка, чтобы выглядело "дышаще" */
+.section_header h1,
+.section_header h2 {
+  animation-delay: 0.15s;
+}
+
+@keyframes softFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
