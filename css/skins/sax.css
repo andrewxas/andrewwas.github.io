@@ -737,3 +737,72 @@ section{
     padding: 22px 12px;
   }
 }
+
+/* ===== MOBILE ALIGNMENT ===== */
+@media (max-width: 768px){
+  body{
+    overflow-x: hidden;
+  }
+
+  /* even gutters + clean edges */
+  .container{
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .row{
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+  }
+  .row > [class*="col-"]{
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  /* hero alignment */
+  .hero-strip{
+    position: relative;
+    top: auto;
+    transform: none;
+    padding: 22px 0;
+  }
+  .top_wrapper .top_text{
+    text-align: center;
+  }
+  .top_wrapper .top_text h1{
+    font-size: 28px;
+    line-height: 1.15;
+  }
+  .top_wrapper .top_text p{
+    font-size: 14px;
+  }
+
+  /* images never overflow */
+  img{
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* center section headers but keep body text readable */
+  .section_header{
+    text-align: center;
+  }
+  .section_content{
+    text-align: left;
+  }
+
+  /* about/resume blocks */
+  .person{
+    text-align: center;
+  }
+  .resume_item{
+    text-align: left;
+  }
+  .resume_title{
+    justify-content: flex-start;
+  }
+
+  /* footer alignment */
+  .main_footer{
+    text-align: center;
+  }
+}
