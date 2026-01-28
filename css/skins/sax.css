@@ -819,8 +819,9 @@ section{
   .top_wrapper .top_text,
   .top_wrapper .top_text h1,
   .top_wrapper .top_text p{
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
 
   /* prevent CTA/button from overflowing */
