@@ -158,16 +158,8 @@ section{
   letter-spacing: 1px;
   background-color: rgba(0,0,0,0.18);
 }
-/*
-/* Minimal motion: disable animations */
-.animated,
-.animation_1,
-.animation_2,
-.animation_3{
-  animation: none !important;
-  transition: none !important;
-}
-*/
+
+
 
 /* Softer form look */
 form input,
