@@ -716,6 +716,9 @@ section{
   .top_mnu.top_mnu_simple{
     height: auto !important;
     padding: 6px 0 !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
   }
   .top_mnu.top_mnu_simple ul{
     flex-wrap: wrap !important;
@@ -724,6 +727,8 @@ section{
     gap: 8px 14px !important;
     height: auto !important;
     padding: 0 10px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
   .top_mnu.top_mnu_simple ul li,
   .top_mnu.top_mnu_simple ul li a{
@@ -753,7 +758,9 @@ section{
 
 /* ===== MOBILE ALIGNMENT ===== */
 @media (max-width: 768px){
+  html,
   body{
+    width: 100%;
     overflow-x: hidden;
   }
 
