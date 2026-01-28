@@ -696,3 +696,44 @@ section{
   padding: 40px 0;
   z-index: 1;
 }
+
+/* ===== MOBILE NAV FIX ===== */
+.top_mnu.top_mnu_simple ul{
+  flex-wrap: nowrap !important;       /* запрет переносов */
+  white-space: nowrap !important;
+}
+
+/* чтобы якоря не прятались под фикс-меню */
+body{
+  padding-top: 44px !important;
+}
+section{
+  scroll-margin-top: 60px;
+}
+
+@media (max-width: 768px){
+  .top_mnu.top_mnu_simple ul{
+    justify-content: flex-start !important;   /* начинаем слева */
+    overflow-x: auto !important;             /* горизонтальный скролл */
+    -webkit-overflow-scrolling: touch;
+    gap: 12px !important;
+    padding: 0 12px !important;
+  }
+
+  /* скрыть полосу прокрутки */
+  .top_mnu.top_mnu_simple ul::-webkit-scrollbar{
+    display: none;
+  }
+
+  .top_mnu.top_mnu_simple ul li a{
+    font-size: 13px !important;
+    padding: 0 8px !important;
+    letter-spacing: .3px !important;
+  }
+}
+
+@media (max-width: 768px){
+  .top_wrapper .top_text{
+    padding: 22px 12px;
+  }
+}
