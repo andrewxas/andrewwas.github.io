@@ -791,6 +791,8 @@ section{
     text-align: center;
     padding-left: 8px;
     padding-right: 8px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .top_wrapper .top_text h1{
     font-size: 28px;
@@ -798,6 +800,8 @@ section{
   }
   .top_wrapper .top_text p{
     font-size: 14px;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   /* avoid text overflow on narrow screens */
@@ -806,6 +810,15 @@ section{
   .top_wrapper .top_text p{
     overflow-wrap: anywhere;
     word-break: break-word;
+  }
+
+  /* prevent CTA/button from overflowing */
+  .top_wrapper .top_text a{
+    display: inline-block !important;
+    max-width: calc(100vw - 32px);
+    white-space: normal !important;
+    text-align: center;
+    box-sizing: border-box;
   }
 
   /* images never overflow */
