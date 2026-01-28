@@ -804,6 +804,8 @@ section{
     padding: 8px 12px !important;
     max-width: 100% !important;
     box-sizing: border-box;
+    letter-spacing: 0.5px !important;
+    word-break: keep-all;
   }
   .top_wrapper .top_text p{
     font-size: 14px;
@@ -822,6 +824,14 @@ section{
     overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
+  }
+
+  /* extra-small screens: shrink hero title to avoid letter breaks */
+  @media (max-width: 360px){
+    .top_wrapper .top_text h1{
+      font-size: 22px;
+      letter-spacing: 0 !important;
+    }
   }
 
   /* prevent CTA/button from overflowing */
