@@ -793,15 +793,22 @@ section{
     padding-right: 8px;
     width: 100%;
     box-sizing: border-box;
+    display: block;
+    max-width: 100%;
   }
   .top_wrapper .top_text h1{
     font-size: 28px;
     line-height: 1.15;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 8px 12px !important;
   }
   .top_wrapper .top_text p{
     font-size: 14px;
     margin-left: 0;
     margin-right: 0;
+    letter-spacing: 1px;
+    white-space: normal;
   }
 
   /* avoid text overflow on narrow screens */
