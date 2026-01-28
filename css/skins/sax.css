@@ -797,15 +797,16 @@ section{
     max-width: 100% !important;
   }
   .top_wrapper .top_text h1{
-    font-size: 28px;
-    line-height: 1.15;
+    font-size: clamp(22px, 7.2vw, 28px);
+    line-height: 1.12;
     margin-left: 0 !important;
     margin-right: 0 !important;
     padding: 8px 12px !important;
     max-width: 100% !important;
     box-sizing: border-box;
-    letter-spacing: 0.5px !important;
+    letter-spacing: 0 !important;
     word-break: keep-all;
+    text-wrap: balance;
   }
   .top_wrapper .top_text p{
     font-size: 14px;
@@ -826,11 +827,12 @@ section{
     hyphens: none;
   }
 
-  /* extra-small screens: shrink hero title to avoid letter breaks */
+  /* extra-small screens: tighten CTA to avoid overflow */
   @media (max-width: 360px){
-    .top_wrapper .top_text h1{
-      font-size: 22px;
-      letter-spacing: 0 !important;
+    .top_wrapper .top_text a{
+      font-size: 12px;
+      letter-spacing: 0.5px !important;
+      padding: 8px 10px !important;
     }
   }
 
