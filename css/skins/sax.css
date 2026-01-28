@@ -789,6 +789,8 @@ section{
   }
   .top_wrapper .top_text{
     text-align: center;
+    padding-left: 8px;
+    padding-right: 8px;
   }
   .top_wrapper .top_text h1{
     font-size: 28px;
@@ -796,6 +798,14 @@ section{
   }
   .top_wrapper .top_text p{
     font-size: 14px;
+  }
+
+  /* avoid text overflow on narrow screens */
+  .top_wrapper .top_text,
+  .top_wrapper .top_text h1,
+  .top_wrapper .top_text p{
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   /* images never overflow */
