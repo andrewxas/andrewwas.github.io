@@ -475,11 +475,30 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     var form = document.getElementById("contact-form");
     if (!form) return;
 
-    form.addEventListener("submit", function () {
+    form.addEventListener("submit", function (e) {
+      // Prevent double-tracking if the browser triggers submit twice
+      if (form.dataset.conversionTracked === "1") return;
+
+      // We want to send the conversion BEFORE leaving the page
+      e.preventDefault();
+
+      var submitForm = function () {
+        form.dataset.conversionTracked = "1";
+        form.submit();
+      };
+
       if (typeof gtag === "function") {
         gtag('event', 'conversion', {
-          'send_to': 'AW-17795294447/REGISTRATION'
+          'send_to': 'AW-17795294447/3vLrCK_Jqe8bEO_JuqVC',
+          'value': 1.0,
+          'currency': 'EUR',
+          'event_callback': submitForm
         });
+
+        // Fallback: if callback doesn’t fire, submit anyway
+        setTimeout(submitForm, 1000);
+      } else {
+        submitForm();
       }
     });
   });
