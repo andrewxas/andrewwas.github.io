@@ -369,6 +369,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
 				</div>
 				<div class="col-md-6 col-sm-6">
 					<form id="contact-form" action="https://formspree.io/f/myzwrnna" method="POST" class="main_form" novalidate>
+  <input type="hidden" name="_redirect" value="https://saxophonunterricht.berlin/?sent=1#contacts" />
   <label class="form-group">
     <span class="color_element">*</span> Dein Name:
     <input type="text" name="name" placeholder="Dein Name" 
@@ -479,130 +480,13 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     var form = document.getElementById("contact-form");
     if (!form) return;
 
-    var submitBtn = document.getElementById("contact-submit");
     var statusEl = document.getElementById("form-status");
-
-    // IMPORTANT: This must match your Google Ads conversion action label.
-    // If you create a NEW conversion action later, replace this value.
-    var GOOGLE_ADS_SEND_TO = "AW-17795294447/3vLrCK_Jqe8bEO_JuqVC";
-
-    function setStatus(msg, isError) {
-      if (!statusEl) return;
-      statusEl.textContent = msg;
-      statusEl.style.color = isError ? "#c62828" : "#2e7d32";
+    if (!statusEl) return;
+    var params = new URLSearchParams(window.location.search || "");
+    if (params.get("sent") === "1") {
+      statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
+      statusEl.style.color = "#2e7d32";
     }
-
-    function setLoading(isLoading) {
-      if (!submitBtn) return;
-      submitBtn.disabled = isLoading;
-      submitBtn.style.opacity = isLoading ? "0.6" : "1";
-    }
-
-    function fireConversion(callback) {
-      // Fire the conversion and then run callback.
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "conversion", {
-          send_to: GOOGLE_ADS_SEND_TO,
-          value: 1.0,
-          currency: "EUR",
-          event_callback: function () {
-            if (typeof callback === "function") callback();
-          }
-        });
-        // Safety fallback in case callback doesn't fire
-        setTimeout(function () {
-          if (typeof callback === "function") callback();
-        }, 1200);
-      } else {
-        if (typeof callback === "function") callback();
-      }
-    }
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      // Prevent double tracking / double submit
-      if (form.dataset.submitting === "1") return;
-
-      // Basic HTML validation gate
-      if (typeof form.checkValidity === "function" && !form.checkValidity()) {
-        // Let jqBootstrapValidation show messages (it listens to submit too)
-        setStatus("Bitte fülle alle Pflichtfelder aus.", true);
-        return;
-      }
-
-      form.dataset.submitting = "1";
-      setLoading(true);
-      setStatus("Sende…", false);
-
-      // iOS Safari often blocks cross-site AJAX to Formspree; prefer native submit.
-      var ua = navigator.userAgent || "";
-      var isIOS = /iP(hone|od|ad)/.test(ua);
-      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
-      if (isIOS && isSafari) {
-        form.dataset.submitting = "0";
-        setLoading(false);
-        HTMLFormElement.prototype.submit.call(form);
-        return;
-      }
-
-      // Fallback for browsers that block/disable fetch (e.g., strict mobile privacy modes)
-      if (typeof window.fetch !== "function" || typeof window.FormData !== "function") {
-        form.dataset.submitting = "0";
-        setLoading(false);
-        HTMLFormElement.prototype.submit.call(form);
-        return;
-      }
-
-      // Submit to Formspree via AJAX so we stay on the same page
-      var actionUrl = form.getAttribute("action");
-      var formData = new FormData(form);
-
-      fetch(actionUrl, {
-        method: "POST",
-        body: formData,
-        headers: {
-          "Accept": "application/json"
-        }
-      })
-        .then(function (res) {
-          if (res.status === 403) {
-            // Formspree blocks AJAX without a custom key / recaptcha setting.
-            form.dataset.submitting = "0";
-            setLoading(false);
-            HTMLFormElement.prototype.submit.call(form);
-            throw { __nativeSubmit: true };
-          }
-          if (!res.ok) {
-            return res.text().then(function (t) {
-              throw new Error("HTTP " + res.status + " " + (t || "Formspree error"));
-            });
-          }
-          return res.json().catch(function () { return {}; });
-        })
-        .then(function () {
-          // Only count conversion after we KNOW the form was received
-          fireConversion(function () {
-            setStatus("Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.", false);
-            form.reset();
-            form.dataset.submitting = "0";
-            setLoading(false);
-          });
-        })
-        .catch(function (err) {
-          if (err && err.__nativeSubmit) return;
-          // If fetch is blocked (common on some mobile privacy settings), try normal form submit.
-          if (err && err.name === "TypeError") {
-            form.dataset.submitting = "0";
-            setLoading(false);
-            HTMLFormElement.prototype.submit.call(form);
-            return;
-          }
-          setStatus("Ups – Senden hat nicht geklappt. (" + (err && err.message ? err.message : "Unbekannter Fehler") + ")", true);
-          form.dataset.submitting = "0";
-          setLoading(false);
-        });
-    });
   });
 </script>
 </body>
