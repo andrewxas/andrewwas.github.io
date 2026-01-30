@@ -80,6 +80,18 @@ section h3 {
 
 /* ===== Form / contact ===== */
 .contacts_icon { color: var(--accent); }
+.hero_cta {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.25), 0 0 45px rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.9);
+  transition: box-shadow 0.25s ease, transform 0.2s ease, background 0.25s ease;
+}
+.hero_cta:hover,
+.hero_cta:focus {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.35), 0 0 60px rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
 .contact_actions {
   display: grid;
   gap: 16px;
