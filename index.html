@@ -566,6 +566,13 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
         }
       })
         .then(function (res) {
+          if (res.status === 403) {
+            // Formspree blocks AJAX without a custom key / recaptcha setting.
+            form.dataset.submitting = "0";
+            setLoading(false);
+            HTMLFormElement.prototype.submit.call(form);
+            throw { __nativeSubmit: true };
+          }
           if (!res.ok) {
             return res.text().then(function (t) {
               throw new Error("HTTP " + res.status + " " + (t || "Formspree error"));
@@ -583,6 +590,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
           });
         })
         .catch(function (err) {
+          if (err && err.__nativeSubmit) return;
           // If fetch is blocked (common on some mobile privacy settings), try normal form submit.
           if (err && err.name === "TypeError") {
             form.dataset.submitting = "0";
