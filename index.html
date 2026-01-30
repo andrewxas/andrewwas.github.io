@@ -390,7 +390,8 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     <span class="help-block text-danger"></span>
   </label>
 
-  <button type="submit">Anfrage senden</button>
+  <button id="contact-submit" type="submit">Anfrage senden</button>
+  <div id="form-status" style="margin-top:12px; font-size:14px;"></div>
 </form>
 				</div>
 			</div>
@@ -478,41 +479,91 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     var form = document.getElementById("contact-form");
     if (!form) return;
 
-    // TODO: After you create the NEW Google Ads conversion action (Lead/Kontakt),
-    // replace the value below with the new "send_to" string from Google Ads.
+    var submitBtn = document.getElementById("contact-submit");
+    var statusEl = document.getElementById("form-status");
+
+    // IMPORTANT: This must match your Google Ads conversion action label.
+    // If you create a NEW conversion action later, replace this value.
     var GOOGLE_ADS_SEND_TO = "AW-17795294447/3vLrCK_Jqe8bEO_JuqVC";
 
-    form.addEventListener("submit", function (e) {
-      // Prevent double tracking
-      if (form.dataset.conversionTracked === "1") return;
+    function setStatus(msg, isError) {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.style.color = isError ? "#c62828" : "#2e7d32";
+    }
 
-      // If required fields are missing, don't count a conversion.
-      // (The form uses novalidate, but checkValidity still works as a gate.)
-      if (typeof form.checkValidity === "function" && !form.checkValidity()) {
-        return;
-      }
+    function setLoading(isLoading) {
+      if (!submitBtn) return;
+      submitBtn.disabled = isLoading;
+      submitBtn.style.opacity = isLoading ? "0.6" : "1";
+    }
 
-      // We want to send the conversion BEFORE leaving the page
-      e.preventDefault();
-
-      var submitForm = function () {
-        form.dataset.conversionTracked = "1";
-        form.submit();
-      };
-
+    function fireConversion(callback) {
+      // Fire the conversion and then run callback.
       if (typeof window.gtag === "function") {
         window.gtag("event", "conversion", {
           send_to: GOOGLE_ADS_SEND_TO,
           value: 1.0,
           currency: "EUR",
-          event_callback: submitForm
+          event_callback: function () {
+            if (typeof callback === "function") callback();
+          }
         });
-
-        // Fallback: if callback doesn’t fire quickly, submit anyway
-        setTimeout(submitForm, 800);
+        // Safety fallback in case callback doesn't fire
+        setTimeout(function () {
+          if (typeof callback === "function") callback();
+        }, 1200);
       } else {
-        submitForm();
+        if (typeof callback === "function") callback();
       }
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Prevent double tracking / double submit
+      if (form.dataset.submitting === "1") return;
+
+      // Basic HTML validation gate
+      if (typeof form.checkValidity === "function" && !form.checkValidity()) {
+        // Let jqBootstrapValidation show messages (it listens to submit too)
+        setStatus("Bitte fülle alle Pflichtfelder aus.", true);
+        return;
+      }
+
+      form.dataset.submitting = "1";
+      setLoading(true);
+      setStatus("Sende…", false);
+
+      // Submit to Formspree via AJAX so we stay on the same page
+      var actionUrl = form.getAttribute("action");
+      var formData = new FormData(form);
+
+      fetch(actionUrl, {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Accept": "application/json"
+        }
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("Formspree error");
+          return res.json().catch(function () { return {}; });
+        })
+        .then(function () {
+          // Only count conversion after we KNOW the form was received
+          fireConversion(function () {
+            setStatus("Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.", false);
+            form.reset();
+            form.dataset.submitting = "0";
+            setLoading(false);
+          });
+        })
+        .catch(function () {
+          setStatus("Ups – Senden hat nicht geklappt. Bitte versuch es nochmal oder schreib mir direkt per WhatsApp/SMS.", true);
+          form.dataset.submitting = "0";
+          setLoading(false);
+        });
     });
   });
 </script>
