@@ -356,7 +356,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
 				<div class="col-md-6 col-sm-6">
 					<div class="contact_actions">
 					<div class="contact_box">
-						<a href="https://wa.me/491774125734" target="_blank" rel="noopener" class="contact_action">
+						<a href="https://wa.me/491774125734" target="_blank" rel="noopener" class="contact_action" id="whatsapp-link">
 							<span class="contacts_icon icon-basic-smartphone"></span>
 							<span>WhatsApp Chat öffnen</span>
 						</a>
@@ -503,6 +503,17 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
           // ignore storage errors
         }
       }
+    }
+
+    var waLink = document.getElementById("whatsapp-link");
+    if (waLink && typeof window.gtag === "function") {
+      waLink.addEventListener("click", function () {
+        window.gtag("event", "conversion", {
+          send_to: "AW-17795294447/eVA9CNmXye8bEO_JuqVC",
+          value: 1.0,
+          currency: "EUR"
+        });
+      });
     }
   });
 </script>
