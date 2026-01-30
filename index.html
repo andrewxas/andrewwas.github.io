@@ -486,6 +486,21 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     if (params.get("sent") === "1") {
       statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
       statusEl.style.color = "#2e7d32";
+      // Google Ads conversion (page-load after successful submit)
+      if (typeof window.gtag === "function") {
+        try {
+          if (!sessionStorage.getItem("conv_sent_1")) {
+            window.gtag("event", "conversion", {
+              send_to: "AW-17795294447/Bi22CKCJm-8bEO_JuqVC",
+              value: 1.0,
+              currency: "EUR"
+            });
+            sessionStorage.setItem("conv_sent_1", "1");
+          }
+        } catch (e) {
+          // ignore storage errors
+        }
+      }
     }
   });
 </script>
