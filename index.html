@@ -535,6 +535,17 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
       setLoading(true);
       setStatus("Sende…", false);
 
+      // iOS Safari often blocks cross-site AJAX to Formspree; prefer native submit.
+      var ua = navigator.userAgent || "";
+      var isIOS = /iP(hone|od|ad)/.test(ua);
+      var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(ua);
+      if (isIOS && isSafari) {
+        form.dataset.submitting = "0";
+        setLoading(false);
+        HTMLFormElement.prototype.submit.call(form);
+        return;
+      }
+
       // Fallback for browsers that block/disable fetch (e.g., strict mobile privacy modes)
       if (typeof window.fetch !== "function" || typeof window.FormData !== "function") {
         form.dataset.submitting = "0";
@@ -557,7 +568,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
         .then(function (res) {
           if (!res.ok) {
             return res.text().then(function (t) {
-              throw new Error(t || "Formspree error");
+              throw new Error("HTTP " + res.status + " " + (t || "Formspree error"));
             });
           }
           return res.json().catch(function () { return {}; });
@@ -579,7 +590,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
             HTMLFormElement.prototype.submit.call(form);
             return;
           }
-          setStatus("Ups – Senden hat nicht geklappt. Bitte versuch es nochmal oder schreib mir direkt per WhatsApp/SMS.", true);
+          setStatus("Ups – Senden hat nicht geklappt. (" + (err && err.message ? err.message : "Unbekannter Fehler") + ")", true);
           form.dataset.submitting = "0";
           setLoading(false);
         });
