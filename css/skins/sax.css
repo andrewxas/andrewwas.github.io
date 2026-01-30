@@ -80,6 +80,23 @@ section h3 {
 
 /* ===== Form / contact ===== */
 .contacts_icon { color: var(--accent); }
+.contact_action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #9b7a4c;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.contact_action .contacts_icon {
+  margin: 0;
+}
+.contact_action:hover,
+.contact_action:focus {
+  opacity: 0.75;
+}
 
 form input:focus,
 form textarea:focus {
@@ -885,4 +902,3 @@ section{
     text-align: center;
   }
 }
-
