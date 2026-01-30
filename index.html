@@ -535,6 +535,14 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
       setLoading(true);
       setStatus("Sende…", false);
 
+      // Fallback for browsers that block/disable fetch (e.g., strict mobile privacy modes)
+      if (typeof window.fetch !== "function" || typeof window.FormData !== "function") {
+        form.dataset.submitting = "0";
+        setLoading(false);
+        HTMLFormElement.prototype.submit.call(form);
+        return;
+      }
+
       // Submit to Formspree via AJAX so we stay on the same page
       var actionUrl = form.getAttribute("action");
       var formData = new FormData(form);
@@ -547,7 +555,11 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
         }
       })
         .then(function (res) {
-          if (!res.ok) throw new Error("Formspree error");
+          if (!res.ok) {
+            return res.text().then(function (t) {
+              throw new Error(t || "Formspree error");
+            });
+          }
           return res.json().catch(function () { return {}; });
         })
         .then(function () {
@@ -559,7 +571,14 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
             setLoading(false);
           });
         })
-        .catch(function () {
+        .catch(function (err) {
+          // If fetch is blocked (common on some mobile privacy settings), try normal form submit.
+          if (err && err.name === "TypeError") {
+            form.dataset.submitting = "0";
+            setLoading(false);
+            HTMLFormElement.prototype.submit.call(form);
+            return;
+          }
           setStatus("Ups – Senden hat nicht geklappt. Bitte versuch es nochmal oder schreib mir direkt per WhatsApp/SMS.", true);
           form.dataset.submitting = "0";
           setLoading(false);
