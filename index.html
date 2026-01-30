@@ -362,7 +362,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
 						</a>
 					</div>
 					<div class="contact_box">
-						<a href="mailto:djandysax@gmail.com" target="_blank" rel="noopener" class="contact_action">
+						<a href="mailto:djandysax@gmail.com" target="_blank" rel="noopener" class="contact_action" id="email-link">
 							<span class="contacts_icon icon-basic-mail"></span>
 							<span>E-Mail schreiben</span>
 						</a>
@@ -510,6 +510,17 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
       waLink.addEventListener("click", function () {
         window.gtag("event", "conversion", {
           send_to: "AW-17795294447/eVA9CNmXye8bEO_JuqVC",
+          value: 1.0,
+          currency: "EUR"
+        });
+      });
+    }
+
+    var emailLink = document.getElementById("email-link");
+    if (emailLink && typeof window.gtag === "function") {
+      emailLink.addEventListener("click", function () {
+        window.gtag("event", "conversion", {
+          send_to: "AW-17795294447/-EEmCJDalu8bEO_JuqVC",
           value: 1.0,
           currency: "EUR"
         });
