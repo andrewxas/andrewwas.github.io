@@ -80,22 +80,40 @@ section h3 {
 
 /* ===== Form / contact ===== */
 .contacts_icon { color: var(--accent); }
+.contact_actions {
+  display: grid;
+  gap: 16px;
+  margin-top: 10px;
+}
 .contact_action {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: #9b7a4c;
+  gap: 12px;
+  color: #6f5530;
   text-decoration: none;
-  text-transform: uppercase;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0.3px;
 }
 .contact_action .contacts_icon {
   margin: 0;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #f5ede2;
+  box-shadow: inset 0 0 0 1px #e1d2bd;
+  color: #9b7a4c;
 }
 .contact_action:hover,
 .contact_action:focus {
-  opacity: 0.75;
+  color: #8a6a3f;
+}
+.contact_action:hover .contacts_icon,
+.contact_action:focus .contacts_icon {
+  transform: translateX(2px);
+  transition: transform 0.2s ease;
 }
 
 form input:focus,
