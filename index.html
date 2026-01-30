@@ -8,7 +8,10 @@
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
-		gtag('config', 'AW-17795294447');
+		gtag('config', 'AW-17795294447', {
+		  // Helps preserve attribution when the form redirects to Formspree
+		  'linker': { 'domains': ['formspree.io'] }
+		});
 	</script>
 	<title>Saxophonunterricht in Berlin | Andy</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -475,9 +478,19 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     var form = document.getElementById("contact-form");
     if (!form) return;
 
+    // TODO: After you create the NEW Google Ads conversion action (Lead/Kontakt),
+    // replace the value below with the new "send_to" string from Google Ads.
+    var GOOGLE_ADS_SEND_TO = "AW-17795294447/3vLrCK_Jqe8bEO_JuqVC";
+
     form.addEventListener("submit", function (e) {
-      // Prevent double-tracking if the browser triggers submit twice
+      // Prevent double tracking
       if (form.dataset.conversionTracked === "1") return;
+
+      // If required fields are missing, don't count a conversion.
+      // (The form uses novalidate, but checkValidity still works as a gate.)
+      if (typeof form.checkValidity === "function" && !form.checkValidity()) {
+        return;
+      }
 
       // We want to send the conversion BEFORE leaving the page
       e.preventDefault();
@@ -487,16 +500,16 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
         form.submit();
       };
 
-      if (typeof gtag === "function") {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-17795294447/3vLrCK_Jqe8bEO_JuqVC',
-          'value': 1.0,
-          'currency': 'EUR',
-          'event_callback': submitForm
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "conversion", {
+          send_to: GOOGLE_ADS_SEND_TO,
+          value: 1.0,
+          currency: "EUR",
+          event_callback: submitForm
         });
 
-        // Fallback: if callback doesn’t fire, submit anyway
-        setTimeout(submitForm, 1000);
+        // Fallback: if callback doesn’t fire quickly, submit anyway
+        setTimeout(submitForm, 800);
       } else {
         submitForm();
       }
