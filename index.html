@@ -517,19 +517,25 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
         }
       })
         .then(function (response) {
-          if (!response.ok) throw new Error("Network response was not ok");
-          statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
-          statusEl.style.color = "#2e7d32";
-          try {
-            window.history.replaceState(null, "", "/?sent=1#contacts");
-          } catch (err) {
-            // ignore history errors
+          if (response.ok) {
+            statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
+            statusEl.style.color = "#2e7d32";
+            try {
+              window.history.replaceState(null, "", "/?sent=1#contacts");
+            } catch (err) {
+              // ignore history errors
+            }
+            form.reset();
+            return;
           }
-          form.reset();
+          throw new Error("Network response was not ok");
         })
         .catch(function () {
-          statusEl.textContent = "Ups, da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.";
+          statusEl.textContent = "Senden im Hintergrund fehlgeschlagen. Ich sende jetzt normal...";
           statusEl.style.color = "#c62828";
+          setTimeout(function () {
+            form.submit();
+          }, 300);
         });
     };
 
