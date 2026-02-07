@@ -490,16 +490,7 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
       statusEl.style.color = "#2e7d32";
     }
 
-    var onFormSubmit = function (e) {
-      e.preventDefault();
-
-      var submitted = false;
-      var finalize = function () {
-        if (submitted) return;
-        submitted = true;
-        form.submit();
-      };
-
+    var onFormSubmit = function () {
       if (typeof window.gtag === "function") {
         try {
           if (!sessionStorage.getItem("conv_form_1")) {
@@ -507,21 +498,15 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
               send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
               value: 1.0,
               currency: "EUR",
-              event_callback: finalize
+              event_callback: function () {},
+              event_timeout: 2000
             });
             sessionStorage.setItem("conv_form_1", "1");
-          } else {
-            finalize();
           }
         } catch (err) {
-          finalize();
+          // ignore storage errors
         }
-      } else {
-        finalize();
       }
-
-      // Fallback in case callback is blocked
-      setTimeout(finalize, 1200);
     };
 
     form.addEventListener("submit", onFormSubmit);
