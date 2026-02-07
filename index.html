@@ -488,22 +488,42 @@ aus Verständnis, Hören und Gefühl, nicht aus Druck oder Erwartung.
     if (params.get("sent") === "1") {
       statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
       statusEl.style.color = "#2e7d32";
-      // Google Ads conversion (page-load after successful submit)
-      if (typeof window.gtag === "function") {
-        try {
-          if (!sessionStorage.getItem("conv_sent_1")) {
-            window.gtag("event", "conversion", {
-              send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
-              value: 1.0,
-              currency: "EUR"
-            });
-            sessionStorage.setItem("conv_sent_1", "1");
-          }
-        } catch (e) {
-          // ignore storage errors
-        }
-      }
     }
+
+    var onFormSubmit = function (e) {
+      if (typeof window.gtag !== "function") return;
+      try {
+        if (sessionStorage.getItem("conv_form_1")) return;
+      } catch (err) {
+        // ignore storage errors
+      }
+
+      e.preventDefault();
+      var submitted = false;
+      var finalize = function () {
+        if (submitted) return;
+        submitted = true;
+        form.submit();
+      };
+
+      window.gtag("event", "conversion", {
+        send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
+        value: 1.0,
+        currency: "EUR",
+        event_callback: finalize
+      });
+
+      // Fallback in case callback is blocked
+      setTimeout(finalize, 1200);
+
+      try {
+        sessionStorage.setItem("conv_form_1", "1");
+      } catch (err) {
+        // ignore storage errors
+      }
+    };
+
+    form.addEventListener("submit", onFormSubmit);
 
     var waLink = document.getElementById("whatsapp-link");
     if (waLink && typeof window.gtag === "function") {
