@@ -556,6 +556,20 @@ svg path {
 
 .vibe_layout {
   margin-top: 5px;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+}
+
+.vibe_side {
+  width: 26%;
+  min-width: 0;
+  display: flex;
+}
+
+.vibe_center {
+  width: 48%;
+  min-width: 0;
 }
 
 .vibe_text {
@@ -602,22 +616,17 @@ svg path {
   background: #b08d57;
 }
 
-.vibe_photos {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: 100%;
-}
-
 .vibe_photo_item {
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   border-radius: 12px;
   padding: 8px;
-  height: clamp(150px, 14vw, 210px);
+  flex: 1;
   min-height: 0;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .vibe_photo {
@@ -625,8 +634,8 @@ svg path {
   height: 100%;
   display: block;
   border-radius: 8px;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
+  object-position: center;
 }
 
 .vibe_cta_wrap {

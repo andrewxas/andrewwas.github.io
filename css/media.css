@@ -35,8 +35,20 @@
 	.vibe_text h3 {
 		font-size: 20px;
 	}
+	.vibe_layout {
+		flex-direction: column;
+		gap: 12px;
+	}
+	.vibe_side,
+	.vibe_center {
+		width: 100%;
+	}
 	.vibe_photo_item {
-		height: 240px;
+		height: auto;
+	}
+	.vibe_photo {
+		height: auto;
+		max-height: 420px;
 	}
 	.top_mnu.top_mnu_simple ul {
 		justify-content: flex-start !important;
@@ -85,8 +97,8 @@
 	.vibe_text h3 {
 		font-size: 18px;
 	}
-	.vibe_photo_item {
-		height: 210px;
+	.vibe_photo {
+		max-height: 320px;
 	}
 }
 
