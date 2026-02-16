@@ -29,6 +29,20 @@
   margin-top: 60%;  
   text-align: center;
   position: relative;}
+	.vibe_photo {
+		height: 280px;
+	}
+	.top_mnu.top_mnu_simple ul {
+		justify-content: flex-start !important;
+		overflow-x: auto;
+		white-space: nowrap;
+		gap: 2px !important;
+		padding-left: 8px !important;
+		padding-right: 8px !important;
+	}
+	.top_mnu.top_mnu_simple ul::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 /* Extra Small Devices, Phones */
@@ -53,12 +67,18 @@
 	.logo_container {
   text-align: center; }
 
-.logo {
+	.logo {
   height: 100px;
   z-index: 1;
   margin-top: 99%;  
   text-align: center;
   position: relative;}
+	.vibe_photo {
+		height: 240px;
+	}
+	.vibe_card_body h3 {
+		font-size: 16px;
+	}
 }
 
 /* Custom, iPhone Retina */
