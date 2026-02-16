@@ -40,7 +40,10 @@
 		gap: 12px;
 	}
 	.vibe_photo {
-		max-height: 420px;
+		width: 100%;
+		height: auto;
+		max-height: none;
+		object-fit: contain;
 	}
 	.top_mnu.top_mnu_simple ul {
 		justify-content: flex-start !important;
@@ -90,7 +93,10 @@
 		font-size: 18px;
 	}
 	.vibe_photo {
-		max-height: 320px;
+		width: 100%;
+		height: auto;
+		max-height: none;
+		object-fit: contain;
 	}
 }
 
