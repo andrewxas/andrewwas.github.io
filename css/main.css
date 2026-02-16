@@ -554,43 +554,77 @@ svg path {
   padding: 60px 0;
 }
 
-.vibe_grid {
+.vibe_layout {
   margin-top: 5px;
 }
 
-.vibe_card {
+.vibe_text {
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 20px;
+  padding: 24px 24px 18px;
+  min-height: 100%;
+}
+
+.vibe_text h3 {
+  text-align: left;
+  margin: 0 0 12px;
+  font-size: 24px;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.vibe_text p {
+  margin: 0 0 12px;
+}
+
+.vibe_points {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vibe_points li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 8px;
+}
+
+.vibe_points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b08d57;
+}
+
+.vibe_photos {
+  display: grid;
+  gap: 12px;
+}
+
+.vibe_photo_item {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 8px;
 }
 
 .vibe_photo {
   width: 100%;
-  height: 340px;
+  height: auto;
   display: block;
-  object-fit: cover;
-}
-
-.vibe_card_body {
-  padding: 18px 20px 20px;
-}
-
-.vibe_card_body h3 {
-  text-align: left;
-  margin: 0 0 10px;
-  font-size: 18px;
-}
-
-.vibe_card_body p {
-  margin: 0;
+  border-radius: 8px;
 }
 
 .vibe_cta_wrap {
   text-align: center;
-  margin-top: 12px;
+  margin-top: 18px;
 }
 
 .vibe_cta {

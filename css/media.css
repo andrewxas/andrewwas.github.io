@@ -29,8 +29,11 @@
   margin-top: 60%;  
   text-align: center;
   position: relative;}
-	.vibe_photo {
-		height: 280px;
+	.vibe_text {
+		margin-bottom: 14px;
+	}
+	.vibe_text h3 {
+		font-size: 20px;
 	}
 	.top_mnu.top_mnu_simple ul {
 		justify-content: flex-start !important;
@@ -73,11 +76,11 @@
   margin-top: 99%;  
   text-align: center;
   position: relative;}
-	.vibe_photo {
-		height: 240px;
+	.vibe_text {
+		padding: 18px 16px 14px;
 	}
-	.vibe_card_body h3 {
-		font-size: 16px;
+	.vibe_text h3 {
+		font-size: 18px;
 	}
 }
 
