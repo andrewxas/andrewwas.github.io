@@ -603,8 +603,10 @@ svg path {
 }
 
 .vibe_photos {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
+  height: 100%;
 }
 
 .vibe_photo_item {
@@ -613,13 +615,18 @@ svg path {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   border-radius: 12px;
   padding: 8px;
+  height: clamp(150px, 14vw, 210px);
+  min-height: 0;
+  display: flex;
 }
 
 .vibe_photo {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   border-radius: 8px;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .vibe_cta_wrap {

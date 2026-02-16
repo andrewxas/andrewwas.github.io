@@ -35,6 +35,9 @@
 	.vibe_text h3 {
 		font-size: 20px;
 	}
+	.vibe_photo_item {
+		height: 240px;
+	}
 	.top_mnu.top_mnu_simple ul {
 		justify-content: flex-start !important;
 		overflow-x: auto;
@@ -81,6 +84,9 @@
 	}
 	.vibe_text h3 {
 		font-size: 18px;
+	}
+	.vibe_photo_item {
+		height: 210px;
 	}
 }
 
