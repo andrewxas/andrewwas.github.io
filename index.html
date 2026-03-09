@@ -12,6 +12,7 @@
 		  // Helps preserve attribution when the form redirects to Formspree
 		  'linker': { 'domains': ['formspree.io'] }
 		});
+		gtag('config', 'G-9967ZW37TC');
 	</script>
 	<title>Saxophonunterricht in Berlin | Andy</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -586,6 +587,10 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
 
     var onFormSubmit = function () {
       if (typeof window.gtag === "function") {
+        window.gtag("event", "form_submit", {
+          event_category: "lead",
+          event_label: "contact_form"
+        });
         try {
           if (!sessionStorage.getItem("conv_form_1")) {
             window.gtag("event", "conversion", {
@@ -608,6 +613,10 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
     var waLink = document.getElementById("whatsapp-link");
     if (waLink && typeof window.gtag === "function") {
       waLink.addEventListener("click", function () {
+        window.gtag("event", "whatsapp_click", {
+          event_category: "contact",
+          event_label: "whatsapp"
+        });
         window.gtag("event", "conversion", {
           send_to: "AW-17795294447/eVA9CNmXye8bEO_JuqVC",
           value: 1.0,
@@ -632,6 +641,10 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
         };
 
         if (typeof window.gtag === "function") {
+          window.gtag("event", "email_click", {
+            event_category: "contact",
+            event_label: "mailto"
+          });
           window.gtag("event", "conversion", {
             send_to: "AW-17795294447/-EEmCJDa1u8bEO_JuqVC",
             value: 1.0,
@@ -653,6 +666,10 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
       var fireScrollConv = function () {
         try {
           if (!sessionStorage.getItem("conv_scroll_1")) {
+            window.gtag("event", "scroll_contacts", {
+              event_category: "engagement",
+              event_label: "contacts_section"
+            });
             window.gtag("event", "conversion", {
               send_to: "AW-17795294447/vtb2C1jsyu8bEO_JuqVC",
               value: 1.0,
