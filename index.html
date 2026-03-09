@@ -617,13 +617,34 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
     }
 
     var emailLink = document.getElementById("email-link");
-    if (emailLink && typeof window.gtag === "function") {
-      emailLink.addEventListener("click", function () {
-        window.gtag("event", "conversion", {
-          send_to: "AW-17795294447/-EEmCJDa1u8bEO_JuqVC",
-          value: 1.0,
-          currency: "EUR"
-        });
+    if (emailLink) {
+      emailLink.addEventListener("click", function (e) {
+        var emailHref = emailLink.getAttribute("href");
+        if (!emailHref) return;
+
+        e.preventDefault();
+
+        var opened = false;
+        var openMailto = function () {
+          if (opened) return;
+          opened = true;
+          window.location.href = emailHref;
+        };
+
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "conversion", {
+            send_to: "AW-17795294447/-EEmCJDa1u8bEO_JuqVC",
+            value: 1.0,
+            currency: "EUR",
+            event_callback: openMailto,
+            event_timeout: 2000
+          });
+
+          // Fallback if callback is delayed/blocked.
+          setTimeout(openMailto, 1200);
+        } else {
+          openMailto();
+        }
       });
     }
 
