@@ -589,10 +589,24 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
     var statusEl = document.getElementById("form-status");
     if (!statusEl) return;
     var storageKey = "first_touch_attribution";
+    var debugStorageKey = "ga_debug_mode";
+    var initParams = new URLSearchParams(window.location.search || "");
+    if (initParams.get("ga_debug") === "1") {
+      try { localStorage.setItem(debugStorageKey, "1"); } catch (e) {}
+    }
+    if (initParams.get("ga_debug") === "0") {
+      try { localStorage.removeItem(debugStorageKey); } catch (e) {}
+    }
+    var gaDebugMode = initParams.get("ga_debug") === "1";
+    if (!gaDebugMode) {
+      try { gaDebugMode = localStorage.getItem(debugStorageKey) === "1"; } catch (e) {}
+    }
 
     var trackEvent = function (name, params) {
       if (typeof window.gtag !== "function") return;
-      window.gtag("event", name, params || {});
+      var payload = params ? Object.assign({}, params) : {};
+      if (gaDebugMode) payload.debug_mode = true;
+      window.gtag("event", name, payload);
     };
 
     var readFirstTouch = function () {
