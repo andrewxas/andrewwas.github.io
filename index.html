@@ -467,6 +467,15 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
 				<div class="col-md-6 col-sm-6">
 					<form id="contact-form" action="https://formspree.io/f/myzwrnna" method="POST" class="main_form" novalidate target="_blank">
   <input type="hidden" name="_redirect" value="https://saxophonunterricht.berlin/?sent=1#contacts" />
+  <input type="hidden" name="utm_source" />
+  <input type="hidden" name="utm_medium" />
+  <input type="hidden" name="utm_campaign" />
+  <input type="hidden" name="utm_term" />
+  <input type="hidden" name="utm_content" />
+  <input type="hidden" name="gclid" />
+  <input type="hidden" name="fbclid" />
+  <input type="hidden" name="landing_page" />
+  <input type="hidden" name="referrer" />
   <label class="form-group">
     <span class="color_element">*</span> Dein Name:
     <input type="text" name="name" placeholder="Dein Name" 
@@ -579,6 +588,67 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
 
     var statusEl = document.getElementById("form-status");
     if (!statusEl) return;
+    var storageKey = "first_touch_attribution";
+
+    var trackEvent = function (name, params) {
+      if (typeof window.gtag !== "function") return;
+      window.gtag("event", name, params || {});
+    };
+
+    var readFirstTouch = function () {
+      try {
+        var raw = localStorage.getItem(storageKey);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    var writeFirstTouch = function (data) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      } catch (e) {
+        // ignore storage errors
+      }
+    };
+
+    var setHidden = function (fieldName, value) {
+      var field = form.querySelector('input[name="' + fieldName + '"]');
+      if (field) field.value = value || "";
+    };
+
+    var currentParams = new URLSearchParams(window.location.search || "");
+    var firstTouch = readFirstTouch();
+    if (!firstTouch) {
+      firstTouch = {
+        utm_source: currentParams.get("utm_source") || "",
+        utm_medium: currentParams.get("utm_medium") || "",
+        utm_campaign: currentParams.get("utm_campaign") || "",
+        utm_term: currentParams.get("utm_term") || "",
+        utm_content: currentParams.get("utm_content") || "",
+        gclid: currentParams.get("gclid") || "",
+        fbclid: currentParams.get("fbclid") || "",
+        landing_page: window.location.href,
+        referrer: document.referrer || ""
+      };
+      writeFirstTouch(firstTouch);
+    } else {
+      // Update click IDs if they appear in later visits.
+      firstTouch.gclid = currentParams.get("gclid") || firstTouch.gclid || "";
+      firstTouch.fbclid = currentParams.get("fbclid") || firstTouch.fbclid || "";
+      writeFirstTouch(firstTouch);
+    }
+
+    setHidden("utm_source", firstTouch.utm_source);
+    setHidden("utm_medium", firstTouch.utm_medium);
+    setHidden("utm_campaign", firstTouch.utm_campaign);
+    setHidden("utm_term", firstTouch.utm_term);
+    setHidden("utm_content", firstTouch.utm_content);
+    setHidden("gclid", firstTouch.gclid);
+    setHidden("fbclid", firstTouch.fbclid);
+    setHidden("landing_page", firstTouch.landing_page);
+    setHidden("referrer", firstTouch.referrer);
+
     var params = new URLSearchParams(window.location.search || "");
     if (params.get("sent") === "1") {
       statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
@@ -586,44 +656,68 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
     }
 
     var onFormSubmit = function () {
-      if (typeof window.gtag === "function") {
-        window.gtag("event", "form_submit", {
-          event_category: "lead",
-          event_label: "contact_form"
-        });
-        try {
-          if (!sessionStorage.getItem("conv_form_1")) {
-            window.gtag("event", "conversion", {
-              send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
-              value: 1.0,
-              currency: "EUR",
-              event_callback: function () {},
-              event_timeout: 2000
-            });
-            sessionStorage.setItem("conv_form_1", "1");
-          }
-        } catch (err) {
-          // ignore storage errors
-        }
-      }
+      trackEvent("form_submit", {
+        event_category: "lead",
+        event_label: "contact_form",
+        traffic_source: firstTouch.utm_source || "(direct)",
+        traffic_medium: firstTouch.utm_medium || "(none)"
+      });
+      trackEvent("generate_lead", {
+        currency: "EUR",
+        value: 1.0,
+        method: "contact_form"
+      });
+      trackEvent("conversion", {
+        send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
+        value: 1.0,
+        currency: "EUR",
+        event_callback: function () {},
+        event_timeout: 2000
+      });
     };
 
     form.addEventListener("submit", onFormSubmit);
 
-    var waLink = document.getElementById("whatsapp-link");
-    if (waLink && typeof window.gtag === "function") {
-      waLink.addEventListener("click", function () {
-        window.gtag("event", "whatsapp_click", {
-          event_category: "contact",
-          event_label: "whatsapp"
+    var messageField = form.querySelector('textarea[name="message"]');
+    if (messageField) {
+      messageField.addEventListener("focus", function () {
+        trackEvent("form_start", {
+          form_id: "contact-form"
         });
-        window.gtag("event", "conversion", {
+      }, { once: true });
+    }
+
+    var waLink = document.getElementById("whatsapp-link");
+    if (waLink) {
+      waLink.addEventListener("click", function () {
+        trackEvent("whatsapp_click", {
+          event_category: "contact",
+          event_label: "whatsapp",
+          link_url: waLink.href
+        });
+        trackEvent("contact_click", {
+          method: "whatsapp",
+          link_url: waLink.href
+        });
+        trackEvent("conversion", {
           send_to: "AW-17795294447/eVA9CNmXye8bEO_JuqVC",
           value: 1.0,
           currency: "EUR"
         });
       });
     }
+
+    var contactAnchors = document.querySelectorAll('a[href="#contacts"]');
+    contactAnchors.forEach(function (anchor) {
+      anchor.addEventListener("click", function () {
+        trackEvent("cta_click", {
+          event_category: "engagement",
+          event_label: "to_contacts",
+          link_text: (anchor.textContent || "").trim(),
+          link_class: anchor.className || ""
+        });
+      });
+    });
 
     var emailLink = document.getElementById("email-link");
     if (emailLink) {
@@ -640,37 +734,38 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
           window.location.href = emailHref;
         };
 
-        if (typeof window.gtag === "function") {
-          window.gtag("event", "email_click", {
-            event_category: "contact",
-            event_label: "mailto"
-          });
-          window.gtag("event", "conversion", {
-            send_to: "AW-17795294447/-EEmCJDa1u8bEO_JuqVC",
-            value: 1.0,
-            currency: "EUR",
-            event_callback: openMailto,
-            event_timeout: 2000
-          });
+        trackEvent("email_click", {
+          event_category: "contact",
+          event_label: "mailto",
+          link_url: emailHref
+        });
+        trackEvent("contact_click", {
+          method: "email",
+          link_url: emailHref
+        });
+        trackEvent("conversion", {
+          send_to: "AW-17795294447/-EEmCJDa1u8bEO_JuqVC",
+          value: 1.0,
+          currency: "EUR",
+          event_callback: openMailto,
+          event_timeout: 2000
+        });
 
-          // Fallback if callback is delayed/blocked.
-          setTimeout(openMailto, 1200);
-        } else {
-          openMailto();
-        }
+        // Fallback if callback is delayed/blocked.
+        setTimeout(openMailto, 1200);
       });
     }
 
     var contactsSection = document.getElementById("contacts");
-    if (contactsSection && typeof window.gtag === "function") {
+    if (contactsSection) {
       var fireScrollConv = function () {
         try {
           if (!sessionStorage.getItem("conv_scroll_1")) {
-            window.gtag("event", "scroll_contacts", {
+            trackEvent("scroll_contacts", {
               event_category: "engagement",
               event_label: "contacts_section"
             });
-            window.gtag("event", "conversion", {
+            trackEvent("conversion", {
               send_to: "AW-17795294447/vtb2C1jsyu8bEO_JuqVC",
               value: 1.0,
               currency: "EUR"
@@ -704,6 +799,13 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
         onScroll();
       }
     }
+
+    setTimeout(function () {
+      trackEvent("engaged_30s", {
+        event_category: "engagement",
+        event_label: "time_on_page_30s"
+      });
+    }, 30000);
   });
 </script>
 </body>
