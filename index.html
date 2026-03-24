@@ -494,8 +494,10 @@ Wir arbeiten an Technik, Ansatz, Ton, Rhythmus, Timing und - je nach Ziel - auch
 					</div>
 				</div>
 				<div class="col-md-6 col-sm-6">
-					<form id="contact-form" action="https://formspree.io/f/myzwrnna" method="POST" class="main_form" novalidate>
-  <input type="hidden" name="_redirect" value="https://saxophonunterricht.berlin/?sent=1#contacts" />
+					<form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="main_form" novalidate>
+  <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_ACCESS_KEY" />
+  <input type="hidden" name="subject" value="Neue Anfrage von saxophonunterricht.berlin" />
+  <input type="checkbox" name="botcheck" style="display:none !important" tabindex="-1" autocomplete="off" />
   <input type="hidden" name="utm_source" />
   <input type="hidden" name="utm_medium" />
   <input type="hidden" name="utm_campaign" />
@@ -747,7 +749,6 @@ Wir arbeiten an Technik, Ansatz, Ton, Rhythmus, Timing und - je nach Ziel - auch
       }
 
       var formData = new FormData(form);
-      formData.delete("_redirect");
 
       fetch(form.action, {
         method: form.method || "POST",
@@ -756,26 +757,26 @@ Wir arbeiten an Technik, Ansatz, Ton, Rhythmus, Timing und - je nach Ziel - auch
           "Accept": "application/json"
         }
       }).then(function (response) {
-        if (!response.ok) {
-          return response.json().catch(function () {
-            return {};
-          }).then(function (payload) {
-            var message = payload && payload.errors && payload.errors.length
-              ? payload.errors[0].message
+        return response.json().catch(function () {
+          return {};
+        }).then(function (payload) {
+          if (!response.ok || payload.success === false) {
+            var message = payload && payload.message
+              ? payload.message
               : "Ups, da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.";
             throw new Error(message);
-          });
-        }
+          }
 
-        form.reset();
-        applyAttributionFields();
+          form.reset();
+          applyAttributionFields();
 
-        var successUrl = new URL(window.location.href);
-        successUrl.searchParams.set("sent", "1");
-        successUrl.hash = "contacts";
-        window.history.replaceState({}, "", successUrl.toString());
+          var successUrl = new URL(window.location.href);
+          successUrl.searchParams.set("sent", "1");
+          successUrl.hash = "contacts";
+          window.history.replaceState({}, "", successUrl.toString());
 
-        markLeadSuccess();
+          markLeadSuccess();
+        });
       }).catch(function (error) {
         statusEl.textContent = error && error.message
           ? error.message
