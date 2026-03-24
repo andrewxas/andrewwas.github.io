@@ -650,26 +650,29 @@ svg path {
 
 .testimonials_carousel {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  padding: 0 58px;
 }
 
 .testimonials_viewport {
   overflow: hidden;
   width: 100%;
+  min-width: 0;
 }
 
 .testimonials_track {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch;
+  gap: 14px;
   transition: transform 0.45s ease;
   will-change: transform;
 }
 
 .testimonial {
   flex: 0 0 calc((100% - 28px) / 3);
-  margin-bottom: 30px;
-  margin-right: 14px;
+  width: calc((100% - 28px) / 3);
+  margin: 0;
   padding: 20px 20px 18px;
   background: #fff;
   border-left: 4px solid #b08d57;
@@ -691,6 +694,9 @@ svg path {
 }
 
 .testimonials_nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   width: 44px;
   height: 44px;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -701,7 +707,15 @@ svg path {
   line-height: 1;
   color: #333;
   cursor: pointer;
-  flex: 0 0 44px;
+  z-index: 2;
+}
+
+.testimonials_prev {
+  left: 0;
+}
+
+.testimonials_next {
+  right: 0;
 }
 
 .testimonials_nav:disabled {
@@ -713,7 +727,7 @@ svg path {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 4px 0 12px;
+  margin: 18px 0 12px;
 }
 
 .testimonials_dot {
