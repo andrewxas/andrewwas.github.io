@@ -653,6 +653,33 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
     if (params.get("sent") === "1") {
       statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
       statusEl.style.color = "#2e7d32";
+
+      try {
+        if (!sessionStorage.getItem("lead_sent_1")) {
+          trackEvent("generate_lead", {
+            currency: "EUR",
+            value: 1.0,
+            method: "contact_form"
+          });
+          trackEvent("conversion", {
+            send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
+            value: 1.0,
+            currency: "EUR"
+          });
+          sessionStorage.setItem("lead_sent_1", "1");
+        }
+      } catch (e) {
+        trackEvent("generate_lead", {
+          currency: "EUR",
+          value: 1.0,
+          method: "contact_form"
+        });
+        trackEvent("conversion", {
+          send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
+          value: 1.0,
+          currency: "EUR"
+        });
+      }
     }
 
     var onFormSubmit = function () {
@@ -661,18 +688,6 @@ Wir arbeiten an Technik, Ansatz und Sound – ebenso an Rhythmus, Timing und Imp
         event_label: "contact_form",
         traffic_source: firstTouch.utm_source || "(direct)",
         traffic_medium: firstTouch.utm_medium || "(none)"
-      });
-      trackEvent("generate_lead", {
-        currency: "EUR",
-        value: 1.0,
-        method: "contact_form"
-      });
-      trackEvent("conversion", {
-        send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
-        value: 1.0,
-        currency: "EUR",
-        event_callback: function () {},
-        event_timeout: 2000
       });
     };
 
