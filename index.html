@@ -668,35 +668,37 @@ Wir arbeiten an Technik, Ansatz, Ton, Rhythmus, Timing und - je nach Ziel - auch
       writeFirstTouch(firstTouch);
     }
 
-    setHidden("utm_source", firstTouch.utm_source);
-    setHidden("utm_medium", firstTouch.utm_medium);
-    setHidden("utm_campaign", firstTouch.utm_campaign);
-    setHidden("utm_term", firstTouch.utm_term);
-    setHidden("utm_content", firstTouch.utm_content);
-    setHidden("gclid", firstTouch.gclid);
-    setHidden("fbclid", firstTouch.fbclid);
-    setHidden("landing_page", firstTouch.landing_page);
-    setHidden("referrer", firstTouch.referrer);
+    var applyAttributionFields = function () {
+      setHidden("utm_source", firstTouch.utm_source);
+      setHidden("utm_medium", firstTouch.utm_medium);
+      setHidden("utm_campaign", firstTouch.utm_campaign);
+      setHidden("utm_term", firstTouch.utm_term);
+      setHidden("utm_content", firstTouch.utm_content);
+      setHidden("gclid", firstTouch.gclid);
+      setHidden("fbclid", firstTouch.fbclid);
+      setHidden("landing_page", firstTouch.landing_page);
+      setHidden("referrer", firstTouch.referrer);
+    };
 
-    var params = new URLSearchParams(window.location.search || "");
-    if (params.get("sent") === "1") {
+    applyAttributionFields();
+
+    var markLeadSuccess = function () {
       statusEl.textContent = "Danke! Deine Anfrage ist angekommen. Ich melde mich zeitnah.";
       statusEl.style.color = "#2e7d32";
 
       try {
-        if (!sessionStorage.getItem("lead_sent_1")) {
-          trackEvent("generate_lead", {
-            currency: "EUR",
-            value: 1.0,
-            method: "contact_form"
-          });
-          trackEvent("conversion", {
-            send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
-            value: 1.0,
-            currency: "EUR"
-          });
-          sessionStorage.setItem("lead_sent_1", "1");
-        }
+        if (sessionStorage.getItem("lead_sent_1")) return;
+        trackEvent("generate_lead", {
+          currency: "EUR",
+          value: 1.0,
+          method: "contact_form"
+        });
+        trackEvent("conversion", {
+          send_to: "AW-17795294447/czddCPzl1e8bEO_JuqVC",
+          value: 1.0,
+          currency: "EUR"
+        });
+        sessionStorage.setItem("lead_sent_1", "1");
       } catch (e) {
         trackEvent("generate_lead", {
           currency: "EUR",
@@ -709,7 +711,14 @@ Wir arbeiten an Technik, Ansatz, Ton, Rhythmus, Timing und - je nach Ziel - auch
           currency: "EUR"
         });
       }
+    };
+
+    var params = new URLSearchParams(window.location.search || "");
+    if (params.get("sent") === "1") {
+      markLeadSuccess();
     }
+
+    var submitButton = document.getElementById("contact-submit");
 
     var onFormSubmit = function () {
       trackEvent("form_submit", {
@@ -720,7 +729,65 @@ Wir arbeiten an Technik, Ansatz, Ton, Rhythmus, Timing und - je nach Ziel - auch
       });
     };
 
-    form.addEventListener("submit", onFormSubmit);
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      if (typeof form.checkValidity === "function" && !form.checkValidity()) {
+        if (typeof form.reportValidity === "function") form.reportValidity();
+        return;
+      }
+
+      onFormSubmit();
+      statusEl.textContent = "Anfrage wird gesendet...";
+      statusEl.style.color = "#555";
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Wird gesendet...";
+      }
+
+      var formData = new FormData(form);
+      formData.delete("_redirect");
+
+      fetch(form.action, {
+        method: form.method || "POST",
+        body: formData,
+        headers: {
+          "Accept": "application/json"
+        }
+      }).then(function (response) {
+        if (!response.ok) {
+          return response.json().catch(function () {
+            return {};
+          }).then(function (payload) {
+            var message = payload && payload.errors && payload.errors.length
+              ? payload.errors[0].message
+              : "Ups, da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.";
+            throw new Error(message);
+          });
+        }
+
+        form.reset();
+        applyAttributionFields();
+
+        var successUrl = new URL(window.location.href);
+        successUrl.searchParams.set("sent", "1");
+        successUrl.hash = "contacts";
+        window.history.replaceState({}, "", successUrl.toString());
+
+        markLeadSuccess();
+      }).catch(function (error) {
+        statusEl.textContent = error && error.message
+          ? error.message
+          : "Ups, da ist etwas schiefgelaufen. Bitte versuch es später noch einmal.";
+        statusEl.style.color = "#c62828";
+      }).finally(function () {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = "Anfrage senden";
+        }
+      });
+    });
 
     var messageField = form.querySelector('textarea[name="message"]');
     if (messageField) {
