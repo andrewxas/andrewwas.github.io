@@ -176,3 +176,14 @@ body { padding-bottom: 72px; }
   .ablauf-grid { grid-template-columns: 3fr 2fr; }
   .plans { grid-template-columns: repeat(4, 1fr); }
 }
+
+/* Rechtliche Seiten */
+.legal { padding: 64px 0 96px; }
+.legal .wrap { max-width: 46rem; }
+.legal h1 { font-size: 2.75rem; margin-bottom: 32px; }
+.legal h2 { font-size: 1.6rem; margin: 40px 0 12px; }
+.legal p, .legal li { color: var(--muted-fg); margin-bottom: 12px; }
+.legal ul { padding-left: 20px; }
+.legal a { color: var(--primary); text-decoration: underline; }
+.legal .back { display: inline-block; margin-bottom: 32px; font-size: .9rem; text-decoration: none; color: var(--muted-fg); }
+body.page-legal { padding-bottom: 0; }
